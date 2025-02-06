@@ -17,6 +17,8 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Althinect\FilamentSpatieRolesPermissions\FilamentSpatieRolesPermissionsPlugin;
+
 
 class DashboardPanelProvider extends PanelProvider
 {
@@ -51,12 +53,13 @@ class DashboardPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
+            ->plugin(FilamentSpatieRolesPermissionsPlugin::make())
             ->authMiddleware([
                 Authenticate::class,
             ])
             ->colors([
                 'danger' => Color::Rose,
-                'gray' => Color::Slate,
+                'gray' => Color::Gray,
                 'info' => Color::Blue,
                 'primary' => Color::Red,
                 'success' => Color::Emerald,

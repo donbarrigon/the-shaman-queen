@@ -60,9 +60,8 @@ class UserResource extends Resource
                             ->dehydrated(false),
 
                 ]),
-                Section::make('Credenciales')
+                Section::make('Informacion Personal')
                     ->columns(2)
-                    ->description('Informacion necesaria para el acceso')
                     ->schema([
                         Forms\Components\TextInput::make('nick')
                             ->label('Nick')
@@ -88,6 +87,11 @@ class UserResource extends Resource
                             ->label('Codigo postal')
                             ->maxLength(255)
                             ->default(null),
+                ]),
+                Section::make('Autorizacion')
+                    ->columns(2)
+                    ->schema([
+                        Forms\Components\Select::make('roles')->multiple()->relationship('roles', 'name')
                 ]),
             ]);
     }
