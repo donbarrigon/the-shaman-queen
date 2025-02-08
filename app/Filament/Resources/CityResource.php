@@ -52,12 +52,16 @@ class CityResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('country.name')
                     ->numeric()
+                    ->color(fn ($record) => $record->deleted_at ? 'danger' : '')
+                    ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('state.name')
                     ->numeric()
+                    ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('latitude')
                     ->numeric()
                     ->sortable(),
@@ -80,10 +84,12 @@ class CityResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\RestoreAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

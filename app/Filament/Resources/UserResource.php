@@ -116,13 +116,13 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('city.name')
                     ->numeric()
                     ->searchable()
+                    ->color(fn ($record) => $record->deleted_at ? 'danger' : '')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('roles.name')
                     ->label('Roles')
                     ->badge()
-                    ->color(fn ($state) => $state === 'guia espiritual' ? 'primary' : 'success')
-                    ->separator(', ')
-                    ->sortable(),
+                    ->color(fn ($state) => $state === 'Guia espiritual' ? 'primary' : 'success')
+                    ->separator(', '),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('address')
@@ -152,10 +152,12 @@ class UserResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\RestoreAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

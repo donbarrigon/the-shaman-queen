@@ -94,6 +94,7 @@ class CountryResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->color(fn ($record) => $record->deleted_at ? 'danger' : '')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('iso2')
                     ->searchable(),
@@ -147,10 +148,12 @@ class CountryResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\RestoreAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

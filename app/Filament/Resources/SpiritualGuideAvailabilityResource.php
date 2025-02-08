@@ -53,6 +53,7 @@ class SpiritualGuideAvailabilityResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('user_id')
                     ->numeric()
+                    ->color(fn ($record) => $record->deleted_at ? 'danger' : '')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('day'),
                 Tables\Columns\TextColumn::make('start_at'),
@@ -71,10 +72,12 @@ class SpiritualGuideAvailabilityResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\RestoreAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

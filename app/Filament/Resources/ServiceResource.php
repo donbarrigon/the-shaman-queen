@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\StateResource\Pages;
-use App\Filament\Resources\StateResource\RelationManagers;
-use App\Models\State;
+use App\Filament\Resources\ServiceResource\Pages;
+use App\Filament\Resources\ServiceResource\RelationManagers;
+use App\Models\Service;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,33 +13,42 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class StateResource extends Resource
+class ServiceResource extends Resource
 {
-    protected static ?string $model = State::class;
+    protected static ?string $model = Service::class;
 
-    protected static ?string $navigationIcon = 'heroicon-s-map';
-    protected static ?string $navigationGroup = 'Localizacion';
-    protected static ?string $navigationLabel = 'Departamentos';
-    protected static ?int $navigationSort = 992;
+    protected static ?string $navigationIcon = 'heroicon-s-briefcase';
+    protected static ?string $navigationGroup = 'Servicios';
+    protected static ?string $navigationLabel = 'Servicios';
+    protected static ?int $navigationSort = 12;
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('country_id')
-                    ->relationship('country', 'name')
-                    ->required(),
+                Forms\Components\TextInput::make('category_id')
+                    ->required()
+                    ->numeric(),
                 Forms\Components\TextInput::make('name')
                     ->required()
-                    ->maxLength(100),
-                Forms\Components\TextInput::make('latitude')
+                    ->maxLength(255),
+                Forms\Components\Textarea::make('description')
+                    ->columnSpanFull(),
+                Forms\Components\Textarea::make('long_description')
+                    ->columnSpanFull(),
+                Forms\Components\TextInput::make('price')
+                    ->required()
                     ->numeric()
-                    ->default(null),
-                Forms\Components\TextInput::make('longitude')
+                    ->default(0.00)
+                    ->prefix('$'),
+                Forms\Components\TextInput::make('duration')
                     ->numeric()
-                    ->default(null),
-                Forms\Components\Toggle::make('is_active')
-                    ->required(),
+                    ->default(60),
+                Forms\Components\FileUpload::make('image_url')
+                    ->image(),
+                Forms\Components\TextInput::make('slug')
+                    ->required()
+                    ->maxLength(255),
             ]);
     }
 
@@ -47,22 +56,21 @@ class StateResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('country.name')
+                Tables\Columns\TextColumn::make('category_id')
                     ->numeric()
-                    ->color(fn ($record) => $record->deleted_at ? 'danger' : '')
-                    ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
+                    ->color(fn ($record) => $record->deleted_at ? 'danger' : ''),
+                Tables\Columns\TextColumn::make('price')
+                    ->money()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('latitude')
+                Tables\Columns\TextColumn::make('duration')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('longitude')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\IconColumn::make('is_active')
-                    ->boolean(),
+                Tables\Columns\ImageColumn::make('image_url'),
+                Tables\Columns\TextColumn::make('slug')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -82,7 +90,7 @@ class StateResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\RestoreAction::make(),
+                Tables\Actions\RestoreAction::make()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -101,9 +109,9 @@ class StateResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListStates::route('/'),
-            'create' => Pages\CreateState::route('/create'),
-            'edit' => Pages\EditState::route('/{record}/edit'),
+            'index' => Pages\ListServices::route('/'),
+            'create' => Pages\CreateService::route('/create'),
+            'edit' => Pages\EditService::route('/{record}/edit'),
         ];
     }
 }
