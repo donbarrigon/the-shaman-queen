@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SpiritualGuideAvailability extends Model
@@ -11,9 +12,14 @@ class SpiritualGuideAvailability extends Model
 
     protected $fillable = [
         'user_id',
-        'days',
+        'day',
         'start_at',
         'end_at',
         'session_duration',
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

@@ -27,12 +27,24 @@ class SpiritualGuideAvailabilityResource extends Resource
     {
         return $form
             ->schema([
-                SpiritualGuideSelect::make('user_id')
-                    ->label('Guia espiritual')
-                    ->required(),
-                Forms\Components\TextInput::make('day')
-                    ->label('Día de la semana')
-                    ->required(),
+                Forms\Components\Section::make()
+                    ->columns(2)
+                    ->schema([
+                        SpiritualGuideSelect::make('user_id')
+                            ->required(),
+                        Forms\Components\Select::make('day')
+                            ->options([
+                                'Lunes' => 'Lunes',
+                                'Martes' => 'Martes',
+                                'Miércoles' => 'Miércoles',
+                                'Jueves' => 'Jueves',
+                                'Viernes' => 'Viernes',
+                                'Sábado' => 'Sábado',
+                                'Domingo' => 'Domingo',
+                            ])
+                            ->label('Día de la semana')
+                            ->required(),
+                    ]),
                 Forms\Components\Section::make('Rango Horario')
                     ->description('Defina el rango habil para recibir consultas (no toma en cuenta el tiempo que tarda la consulta) solo limita la hora de inicio')
                     ->columns(2)
@@ -51,10 +63,18 @@ class SpiritualGuideAvailabilityResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user_id')
+                Tables\Columns\TextColumn::make('user.nick')
+                    ->label('Alias')
                     ->numeric()
                     ->color(fn ($record) => $record->deleted_at ? 'danger' : '')
-                    ->sortable(),
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label('Nombre')
+                    ->numeric()
+                    ->color(fn ($record) => $record->deleted_at ? 'danger' : '')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('day'),
                 Tables\Columns\TextColumn::make('start_at'),
                 Tables\Columns\TextColumn::make('end_at'),

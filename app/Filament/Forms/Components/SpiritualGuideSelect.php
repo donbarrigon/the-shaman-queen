@@ -13,11 +13,11 @@ class SpiritualGuideSelect extends Select
     {
         return parent::make($name)
             ->label('Guia Espiritual')
-            ->options(fn (Get $get): Collection => City::fullName($get('city_id') ?? 0))
-            ->searchable()
-            ->searchDebounce(500)
-            ->getSearchResultsUsing(fn (string $search) => City::search($search))
-            ->searchPrompt('Busca ciudad, estado o país')
-            ->noSearchResultsMessage('No se encontraron resultados');
+            ->options(fn (): Collection => User::GetListGuiaEspiritual())
+            ->searchable();
+            // ->searchDebounce(500)
+            // ->getSearchResultsUsing(fn (string $search) => User::searchGuiaEspiritual($search))
+            // ->searchPrompt('Busca por Alias o nombre')
+            // ->noSearchResultsMessage('No se encontraron resultados');
     }
 }

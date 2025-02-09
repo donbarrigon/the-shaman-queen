@@ -16,4 +16,8 @@ class ServiceCategory extends Model
         'image_url',
         'slug',
     ];
+
+    public function scopeGetList() {
+        return ServiceCategory::all()->pluck('name', 'id');
+    }
 }
