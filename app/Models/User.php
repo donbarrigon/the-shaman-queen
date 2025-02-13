@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Althinect\FilamentSpatieRolesPermissions\Concerns\HasSuperAdmin;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -14,7 +16,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, SoftDeletes, HasRoles;
+    use HasFactory, Notifiable, SoftDeletes, HasRoles, HasSuperAdmin;
 
     /**
      * The attributes that are mass assignable.
@@ -78,5 +80,25 @@ class User extends Authenticatable
             })
             ->limit(20)
             ->pluck('name', 'id');
+    }
+
+    public function scopeSearchByNickOrName($query, string $search)
+    {
+        return $query
+            ->select('id', DB::raw('CONCAT(name, " - ", nick) as name'))
+            ->where('nick', 'like', "%{$search}%")
+            ->orWhere('name', 'like', "%{$search}%")
+            ->limit(20)
+            ->pluck('name', 'id');
+    }
+
+    public function scopeGetNickAndNameById($query, string $search)
+    {
+        $results = $query
+            ->select('id', DB::raw('CONCAT(nick, " - ", name) as name'))
+            ->where('id', $search)
+            ->limit(1)
+            ->pluck('name', 'id');
+        return $results->isEmpty() ? collect(['0' => 'Busca el Nick o el Nombre']) : $results;
     }
 }
