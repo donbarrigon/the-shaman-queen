@@ -38,10 +38,11 @@ class AttendeesRelationManager extends RelationManager
                             ->options([
                                 'Organizador' => 'Organizador',
                                 'Guia espiritual' => 'Guía espiritual',
-                                'Consultante ' => 'Consultante',
+                                'Consultante' => 'Consultante',
                                 'Colaborador' => 'Colaborador',
                                 'Invitado' => 'Invitado',
                             ])
+                            ->default('Consultante')
                             ->required(),
 
                         Forms\Components\Toggle::make('confirmed')
@@ -54,7 +55,7 @@ class AttendeesRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('name')
+            ->recordTitleAttribute('event.name')
             ->columns([
                 // Tables\Columns\TextColumn::make('event.name')
                 //     ->sortable()
@@ -100,7 +101,8 @@ class AttendeesRelationManager extends RelationManager
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
+                    ->label('Agregar Usuarios'),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
