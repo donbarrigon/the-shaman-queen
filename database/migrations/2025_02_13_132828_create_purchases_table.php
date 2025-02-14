@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('supplier_id')->constrained('suppliers');
+            $table->foreignId('supplier_id')->constrained('suppliers')->onDelete('cascade');
             $table->string('invoice_number');
-            $table->date('purchase_date');
+            $table->timestamp('purchased_at');
             $table->decimal('subtotal', 10, 2);
             $table->decimal('tax', 10, 2);
             $table->decimal('total_amount', 10, 2);

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
-            $table->date('saled_at');
+            $table->timestamp('saled_at');
             $table->decimal('total_amount', 10, 2);
             $table->string('payment_method');
             $table->string('status')->default('pending');

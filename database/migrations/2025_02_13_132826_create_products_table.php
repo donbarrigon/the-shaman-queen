@@ -16,10 +16,11 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->decimal('price', 10, 2);
-            $table->integer('stock_minimum')->default(1);
+            $table->decimal('tax', 10, 2)->default(0);
+            $table->integer('tax_percentage')->default(0);
             $table->string('sku')->unique();
             $table->string('barcode')->unique()->nullable();
-            $table->foreignId('category_id')->constrained('product_categories');
+
             $table->timestamps();
             $table->softDeletes();
         });
